@@ -125,7 +125,7 @@ export const useChatStore = create<ChatStore>()(
         }));
 
         // Build messages for API
-        const apiMessages: { role: string; content: string | { type: string; text?: string; image_url?: { url: string } }[] }[] = [];
+        const apiMessages: any[] = [];
 
         if (conversation.systemPrompt) {
           apiMessages.push({ role: 'system', content: conversation.systemPrompt });
@@ -154,10 +154,10 @@ export const useChatStore = create<ChatStore>()(
         set({ _abortController: abortController });
 
         try {
-         let fullContent: string = '';
+         let fullContent = '';
 
           for await (const chunk of streamChat(apiMessages, conversation.model)) {
-            fullContent += chunk.text as string;
+            fullContent += String(chunk.text || '');
 
             set((state) => ({
               conversations: state.conversations.map((c) =>
@@ -165,7 +165,7 @@ export const useChatStore = create<ChatStore>()(
                   ? {
                       ...c,
                       messages: c.messages.map((m) =>
-                        m.id === assistantMessage.id ? { ...m, content: fullContent as string} : m,
+                        m.id === assistantMessage.id ? { ...m, content: content: fullContent} : m,
                       ),
                     }
                   : c,
