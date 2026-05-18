@@ -153,7 +153,7 @@ export const useChatStore = create<ChatStore>()(
         const abortController = new AbortController();
         set({ _abortController: abortController });
 
-       try {
+      try {
   let fullContent = '';
 
   for await (const chunk of streamChat(apiMessages as any, conversation.model)) {
@@ -166,14 +166,81 @@ export const useChatStore = create<ChatStore>()(
               ...c,
               messages: c.messages.map((m) =>
                 m.id === assistantMessage.id
-                  ? { ...m, content: fullContent }
+                  ? {
+                      ...m,
+                      content: fullContent,
+                    }
                   : m,
               ),
             }
           : c,
       ),
     }));
+
+    if (chunk?.usage) {
+      set((state) => ({
+        totalTokensUsed: {
+          promptTokens:
+            state.totalTokensUsed.promptTokens +
+            chunk.usage.promptTokens,
+
+          completionTokens:
+            state.totalTokensUsed.completionTokens +
+            chunk.usage.completionTokens,
+
+          totalTokens:
+            state.totalTokensUsed.totalTokens +
+            chunk.usage.totalTokens,
+        },
+      }));
+    }
   }
+
+  // final update
+  set((state) => ({
+    conversations: state.conversations.map((c) =>
+      c.id === activeConversationId
+        ? {
+            ...c,
+            messages: c.messages.map((m) =>
+              m.id === assistantMessage.id
+                ? {
+                    ...m,
+                    content: fullContent,
+                  }
+                : m,
+            ),
+          }
+        : c,
+    ),
+  }));
+} catch (error) {
+  set((state) => ({
+    conversations: state.conversations.map((c) =>
+      c.id === activeConversationId
+        ? {
+            ...c,
+            messages: c.messages.map((m) =>
+              m.id === assistantMessage.id
+                ? {
+                    ...m,
+                    content: `Error: ${
+                      error instanceof Error
+                        ? error.message
+                        : 'Unknown error'
+                    }`,
+                  }
+                : m,
+            ),
+          }
+        : c,
+    ),
+  }));
+} finally {
+  set({
+    isStreaming: false,
+    _abortController: null,
+  });
 }
 
             if (chunk.usage) {
