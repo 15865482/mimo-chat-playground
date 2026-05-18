@@ -154,24 +154,27 @@ export const useChatStore = create<ChatStore>()(
         set({ _abortController: abortController });
 
         try {
-         let fullContent = '';
+  let fullContent = '';
 
-          for await (const chunk of streamChat(apiMessages, conversation.model)) {
-            fullContent += String(chunk.text || '');
+  for await (const chunk of streamChat(apiMessages, conversation.model)) {
+    fullContent += String(chunk.text || '');
 
-            set((state) => ({
-              conversations: state.conversations.map((c) =>
-                c.id === activeConversationId
-                  ? {
-                      ...c,
-                      messages: c.messages.map((m) =>
-                        m.id === assistantMessage.id ? { ...m, content: content: fullContent} : m,
-                      ),
-                    }
-                  : c,
+    set((state) => ({
+      conversations: state.conversations.map((c) =>
+        c.id === activeConversationId
+          ? {
+              ...c,
+              messages: c.messages.map((m) =>
+                m.id === assistantMessage.id
+                  ? { ...m, content: fullContent }
+                  : m,
               ),
-            }));
-
+            }
+          : c,
+      ),
+    }));
+  }
+}
             if (chunk.usage) {
               set((state) => ({
                 totalTokensUsed: {
