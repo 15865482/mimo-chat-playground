@@ -153,24 +153,28 @@ export const useChatStore = create<ChatStore>()(
         const abortController = new AbortController();
         set({ _abortController: abortController });
 
-        try {
-         let fullContent: string = '';
+       try {
+  let fullContent = '';
 
-          for await (const chunk of streamChat(apiMessages, conversation.model)) {
-            fullContent += chunk.text as string;
+  for await (const chunk of streamChat(apiMessages as any, conversation.model)) {
+    fullContent += String(chunk?.text || '');
 
-            set((state) => ({
-              conversations: state.conversations.map((c) =>
-                c.id === activeConversationId
-                  ? {
-                      ...c,
-                      messages: c.messages.map((m) =>
-                        m.id === assistantMessage.id ? { ...m, content: fullContent as string} : m,
-                      ),
-                    }
-                  : c,
+    set((state) => ({
+      conversations: state.conversations.map((c) =>
+        c.id === activeConversationId
+          ? {
+              ...c,
+              messages: c.messages.map((m) =>
+                m.id === assistantMessage.id
+                  ? { ...m, content: fullContent }
+                  : m,
               ),
-            }));
+            }
+          : c,
+      ),
+    }));
+  }
+}
 
             if (chunk.usage) {
               set((state) => ({
