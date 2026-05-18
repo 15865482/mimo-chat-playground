@@ -153,7 +153,7 @@ export const useChatStore = create<ChatStore>()(
         const abortController = new AbortController();
         set({ _abortController: abortController });
 
-        try {
+    try {
   let fullContent = '';
 
   for await (const chunk of streamChat(apiMessages, conversation.model)) {
