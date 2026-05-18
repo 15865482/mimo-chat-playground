@@ -131,7 +131,7 @@ MIMO_BASE_URL=https://api.xiaomimimo.com/v1
 
 ### Vercel 部署（推荐）
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/mimo-chat-playground)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/15865482/mimo-chat-playground)
 
 一键部署到 Vercel，记得在环境变量中设置 `MIMO_API_KEY`。
 
