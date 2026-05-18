@@ -316,32 +316,23 @@ export const useChatStore = create<ChatStore>()(
                 ),
             }));
 
-            if (chunk?.usage) {
-              set((state) => ({
-                totalTokensUsed: {
-                  promptTokens:
-                    state
-                      .totalTokensUsed
-                      .promptTokens +
-                    chunk.usage
-                      .promptTokens,
+           if (chunk?.usage) {
+  set((state) => ({
+    totalTokensUsed: {
+      promptTokens:
+        state.totalTokensUsed.promptTokens +
+        (chunk.usage?.promptTokens || 0),
 
-                  completionTokens:
-                    state
-                      .totalTokensUsed
-                      .completionTokens +
-                    chunk.usage
-                      .completionTokens,
+      completionTokens:
+        state.totalTokensUsed.completionTokens +
+        (chunk.usage?.completionTokens || 0),
 
-                  totalTokens:
-                    state
-                      .totalTokensUsed
-                      .totalTokens +
-                    chunk.usage
-                      .totalTokens,
-                },
-              }));
-            }
+      totalTokens:
+        state.totalTokensUsed.totalTokens +
+        (chunk.usage?.totalTokens || 0),
+    },
+  }));
+}
           }
         } catch (error) {
           set((state) => ({
