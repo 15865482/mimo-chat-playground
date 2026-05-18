@@ -154,7 +154,7 @@ export const useChatStore = create<ChatStore>()(
         set({ _abortController: abortController });
 
         try {
-          let fullContent = '';
+          let fullContent：string = '';
 
           for await (const chunk of streamChat(apiMessages, conversation.model)) {
             fullContent += chunk.text as string;
