@@ -157,7 +157,7 @@ export const useChatStore = create<ChatStore>()(
           let fullContent = '';
 
           for await (const chunk of streamChat(apiMessages, conversation.model)) {
-            fullContent += chunk.text;
+            fullContent += chunk.text as string;
 
             set((state) => ({
               conversations: state.conversations.map((c) =>
