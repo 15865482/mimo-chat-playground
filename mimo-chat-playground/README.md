@@ -101,7 +101,7 @@ This project was developed for the **Xiaomi MiMo Orbit 100 Trillion Token Creato
 
 ```bash
 # 克隆仓库
-git clone https://github.com/YOUR_USERNAME/mimo-chat-playground.git
+git clone https://github.com/15865482/mimo-chat-playground.git
 cd mimo-chat-playground
 
 # 安装依赖
