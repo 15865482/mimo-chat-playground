@@ -165,7 +165,7 @@ export const useChatStore = create<ChatStore>()(
                   ? {
                       ...c,
                       messages: c.messages.map((m) =>
-                        m.id === assistantMessage.id ? { ...m, content: fullContent } : m,
+                        m.id === assistantMessage.id ? { ...m, content: fullContent as string} : m,
                       ),
                     }
                   : c,
